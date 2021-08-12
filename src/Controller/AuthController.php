@@ -12,23 +12,26 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthController extends AbstractController
 {
-    private $passwordpasswordHasher;
+    private $passwordHasher;
 
     public function __construct(UserPasswordHasherInterface  $passwordHasher) {
-        $this->passwordpasswordHasher = $passwordHasher;
+        $this->passwordHasher = $passwordHasher;
     }
 
     #[Route('/api/signin', name: 'signin', methods: ['POST'])]
-    public function index(AuthenticationUtils $authenticationUtils): Response
+    public function index(AuthenticationUtils $authenticationUtils): JsonResponse
     {
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+       
         return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/AuthController.php',
+            'data' => ['last_username' => $lastUsername, 'error' => $error]
         ]);
     }
 
